@@ -1,0 +1,525 @@
+`timescale 1ns / 1ps
+
+
+module fft_da(clk,init,x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,RX0,RX1,RX2,RX3,RX4,RX5,RX6,RX7,RX8,RX9,RX10,RX11,RX12,RX13,RX14,RX15,IX0,IX1,IX2,IX3,IX4,IX5,IX6,IX7,IX8,IX9,IX10,IX11,IX12,IX13,IX14,IX15);
+input clk,init;
+input  [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output  [31:0]RX0,RX1,RX2,RX3,RX4,RX5,RX6,RX7,RX8,RX9,RX10,RX11,RX12,RX13,RX14,RX15,IX0,IX1,IX2,IX3,IX4,IX5,IX6,IX7,IX8,IX9,IX10,IX11,IX12,IX13,IX14,IX15;
+assign RX0 = x0+x1+x2+x3+x4+x5+x6+x7+x8+x9+x10+x11+x12+x13+x14+x15;
+assign RX8 = x0-x1+x2-x3+x4-x5+x6-x7+x8-x9+x10-x11+x12-x13+x14-x15;
+assign RX4 = x4+x8+x12-x2-x6-x10-x14;
+reX1 R1(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,RX1);
+reX3 R3(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,RX3);
+reX5 R5(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,RX5);
+reX7 R7(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,RX7);
+reX2 R2(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,RX2);
+reX6 R6(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,RX6);
+assign RX9 = RX7;
+assign RX10 = RX6;
+assign RX11 = RX5;
+assign RX12 = RX4;
+assign RX13 = RX3;
+assign RX14 = RX2;
+assign RX15 = RX1;
+assign IX0 = 16'd0;
+assign IX8 = 16'd0;
+assign IX4 = x1+x13+x5+x9-x3-x15-x7-x11;
+imX1 I1(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,IX1);
+imX3 I3(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,IX3);
+imX5 I5(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,IX5);
+imX7 I7(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,IX7);
+imX2 I2(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,IX2);
+imX6 I6(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,IX6);
+assign IX9 = -IX7;
+assign IX10 = -IX6;
+assign IX11 = -IX5;
+assign IX12 = -IX4;
+assign IX13 = -IX3;
+assign IX14 = -IX2;
+assign IX15 = -IX1;
+endmodule
+
+
+module reX1(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,X1);
+//parameter N=6;
+//parameter K=8;
+input clk,init;
+input [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output [31:0]X1;
+wire [31:0] Y1,Y2,Y3,Y5,Y6,Y7;
+wire [31:0] Y123,Y567;
+assign Y1 = x1+x15;
+assign Y3 = x3+x13;
+assign Y5 = x5+x11;
+assign Y7 = x7+x9;
+assign Y2 = x2+x14;
+assign Y6 = x6+x10;
+DA A11(Y1,Y2,Y3,Y123,clk,init);
+DA4 A12(Y5,Y6,Y7,Y567,clk,init);
+assign X1 = Y123 + Y567 -{4'b0000,x8};
+endmodule
+
+module reX3(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,X3);
+//parameter N=6;
+//parameter K=8;
+input clk,init;
+input [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output [31:0]X3;
+wire [31:0] Y1,Y2,Y3,Y5,Y6,Y7;
+wire [31:0]Y123,Y567;
+assign Y1 = x5+x11;
+assign Y3 = x1+x15;
+assign Y5 = x7+x9;
+assign Y7 = x3+x13;
+assign Y2 = x6+x10;
+assign Y6 = x2+x14;
+DA A11(Y1,Y2,Y3,Y123,clk,init);
+DA4 A12(Y5,Y6,Y7,Y567,clk,init);
+assign X3 = Y123 + Y567 -{4'b0000,x8};
+endmodule
+
+module reX5(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,X5);
+//parameter N=6;
+//parameter K=8;
+input clk,init;
+input [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output [31:0]X5;
+wire [31:0] Y1,Y2,Y3,Y5,Y6,Y7;
+wire [31:0]Y123,Y567;
+assign Y1 = x3+x13;
+assign Y3 = x7+x9;
+assign Y5 = x1+x15;
+assign Y7 = x5+x11;
+assign Y2 = x6+x10;
+assign Y6 = x2+x14;
+DA A11(Y1,Y2,Y3,Y123,clk,init);
+DA4 A12(Y5,Y6,Y7,Y567,clk,init);
+assign X5 = Y123 + Y567 -{4'b0000,x8};
+endmodule
+
+
+module reX7(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,X7);
+//parameter N=6;
+//parameter K=8;
+input clk,init;
+input [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output [31:0]X7;
+wire [31:0] Y1,Y2,Y3,Y5,Y6,Y7;
+wire [31:0]Y123,Y567;
+assign Y1 = x7+x9;
+assign Y3 = x5+x11;
+assign Y5 = x3+x13;
+assign Y7 = x1+x15;
+assign Y2 = x2+x14;
+assign Y6 = x6+x10;
+DA A11(Y1,Y2,Y3,Y123,clk,init);
+DA4 A12(Y5,Y6,Y7,Y567,clk,init);
+assign X7 = Y123 + Y567 -{4'b0000,x8};
+endmodule
+
+
+module reX2(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,X2);
+//parameter N=7;
+//parameter K=8;
+input clk,init;
+input [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output [31:0]X2;
+wire [31:0] Y2,Y6;
+wire [31:0]Y26;
+assign Y2 = x1+x7+x15+x9;
+assign Y6 = x3+x5+x13+x11;
+DA1 A11(Y2,Y6,Y26,clk,init);
+assign X2 = Y26 +{4'b0000,x8}-{4'b0000,x4}-{4'b0000,x12} ;
+endmodule
+
+module reX6(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,X6);
+//parameter N=7;
+//parameter K=8;
+input clk,init;
+input [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output [31:0]X6;
+wire [31:0] Y2,Y6;
+wire [31:0]Y26;
+assign Y2 = x3+x5+x13+x11;
+assign Y6 = x1+x7+x15+x9;
+DA1 A11(Y2,Y6,Y26,clk,init);
+assign X6 = Y26 +{4'b0000,x8}-{4'b0000,x4}-{4'b0000,x12} ;
+endmodule
+
+
+module imX1(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,X1);
+//parameter N=6;
+//parameter K=8;
+input clk,init;
+input [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output [31:0]X1;
+wire [31:0] Y1,Y2,Y3,Y5,Y6,Y7;
+wire [31:0]Y123,Y567;
+assign Y1 = x1+x7;
+assign Y3 = x3+x5;
+assign Y5 = x14+x10;
+assign Y7 = x9+x13;
+assign Y2 = x2+x6;
+assign Y6 = x15+x11;
+DA2 A11(Y1,Y2,Y3,Y123,clk,init);
+DA5 A12(Y5,Y6,Y7,Y567,clk,init);
+assign X1 = Y123 + Y567 +{4'b0000,x4}-{4'b0000,x12};
+endmodule
+
+
+module imX3(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,X3);
+//parameter N=6;
+//parameter K=8;
+input clk,init;
+input [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output [31:0]X3;
+wire [31:0] Y1,Y2,Y3,Y5,Y6,Y7;
+wire [31:0] Y123,Y567;
+assign Y1 = x13+x11;
+assign Y3 = x1+x7;
+assign Y5 = x2+x6;
+assign Y7 = x15+x5;
+assign Y2 = x14+x10;
+assign Y6 = x3+x9;
+DA2 A11(Y1,Y2,Y3,Y123,clk,init);
+DA5 A12(Y5,Y6,Y7,Y567,clk,init);
+assign X3 = Y123 + Y567 - {4'b0000,x4}+{4'b0000,x12};
+endmodule
+
+module imX5(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,X5);
+//parameter N=6;
+//parameter K=8;
+input clk,init;
+input [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output [31:0]X5;
+wire [31:0] Y1,Y2,Y3,Y5,Y6,Y7;
+wire [31:0]Y123,Y567;
+assign Y1 = x11+x13;
+assign Y3 = x7+x1;
+assign Y5 = x2+x6;
+assign Y7 = x3+x5;
+assign Y2 = x14+x10;
+assign Y6 = x15+x9;
+DA2 A11(Y1,Y2,Y3,Y123,clk,init);
+DA5 A12(Y5,Y6,Y7,Y567,clk,init);
+assign X5 = Y123 + Y567 + {4'b0000,x4}-{4'b0000,x12};
+endmodule
+
+
+module imX7(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,X7);
+parameter N=6;
+parameter K=8;
+input clk,init;
+input [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output [31:0]X7;
+wire [31:0] Y1,Y2,Y3,Y5,Y6,Y7;
+wire [31:0]Y123,Y567;
+assign Y1 = x7+x1;
+assign Y3 = x5+x3;
+assign Y5 = x2+x6;
+assign Y7 = x9+x15;
+assign Y2 = x10+x14;
+assign Y6 = x11+x13;
+DA2 A11(Y1,Y2,Y3,Y123,clk,init);
+DA5 A12(Y5,Y6,Y7,Y567,clk,init);
+assign X7 = Y123 + Y567 - {4'b0000,x4}+{4'b0000,x12};
+endmodule
+
+module imX2(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,X2);
+//parameter N=7;
+//parameter K=8;
+input clk,init;
+input [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output [31:0]X2;
+wire [31:0] Y2,Y6;
+wire [31:0]Y26;
+assign Y2 = x1+x3+x11+x9;
+assign Y6 = x13+x15+x5+x7;
+DA3 A11(Y2,Y6,Y26,clk,init);
+assign X2 = Y26 +{4'b0000,x2}+{4'b0000,x10}-{4'b0000,x14}-{4'b0000,x6} ;
+endmodule
+
+module imX6(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,clk,init,X6);
+//parameter N=7;
+//parameter K=8;
+input clk,init;
+input [31:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+output [31:0]X6;
+wire [31:0] Y2,Y6;
+wire [31:0]Y26;
+assign Y2 = x1+x3+x9+x11;
+assign Y6 = x5+x7+x15+x13;
+DA3 A11(Y2,Y6,Y26,clk,init);
+assign X6 = Y26 - {4'b0000,x2}-{4'b0000,x10}+{4'b0000,x14}+{4'b0000,x6} ;
+endmodule
+
+
+
+module DA(Y1,Y2,Y3,delay_out,clk,init);
+//parameter M=3;
+//parameter N=6;
+//parameter K=8;
+input [31:0] Y1,Y2,Y3;
+output [31:0]delay_out;
+input clk,init;
+wire [31:0] i; 
+wire [31:0] ROM_out,adder_out,shifter_out;
+wire clrm,clrc,s1,s2;
+counter C(i,clk,clrc);
+controller Co(init,i,1'b0,s1,s2,clrm,clrc,clk);
+ROM R({Y3[i],Y2[i],Y1[i]},ROM_out,clrm);
+Adder A(ROM_out,shifter_out,adder_out);
+delay D(adder_out,delay_out,clk,clrm);
+shifter S(delay_out,shifter_out,clk,clrm);
+endmodule
+    
+
+module DA1(Y2,Y6,delay_out,clk,init);
+//parameter M=3;
+//parameter N=7;
+//parameter K=8;
+input [31:0] Y2,Y6;
+output [31:0]delay_out;
+input clk,init;
+wire [31:0]i; 
+wire [31:0] ROM_out,adder_out,shifter_out;
+wire clrm,clrc,s1,s2;
+counter C(i,clk,clrc);
+controller Co(init,i,1'b0,s1,s2,clrm,clrc,clk);
+ROM1 R({Y2[i],Y6[i]},ROM_out,clrm);
+Adder A(ROM_out,shifter_out,adder_out);
+delay D(adder_out,delay_out,clk,clrm);
+shifter S(delay_out,shifter_out,clk,clrm);
+endmodule
+
+module DA2(Y1,Y2,Y3,delay_out,clk,init);
+//parameter M=3;
+//parameter N=6;
+//parameter K=8;
+input [31:0] Y1,Y2,Y3;
+output [31:0]delay_out;
+input clk,init;
+wire [31:0]i; 
+wire [31:0] ROM_out,adder_out,shifter_out;
+wire clrm,clrc,s1,s2;
+counter C(i,clk,clrc);
+controller Co(init,i,1'b0,s1,s2,clrm,clrc,clk);
+ROM2 R({Y3[i],Y2[i],Y1[i]},ROM_out,clrm);
+Adder A(ROM_out,shifter_out,adder_out);
+delay D(adder_out,delay_out,clk,clrm);
+shifter S(delay_out,shifter_out,clk,clrm);
+endmodule
+
+module DA3(Y2,Y6,delay_out,clk,init);
+//parameter M=3;
+//parameter N=7;
+//parameter K=8;
+input [31:0] Y2,Y6;
+output [31:0]delay_out;
+input clk,init;
+wire [31:0]i; 
+wire [31:0] ROM_out,adder_out,shifter_out;
+wire clrm,clrc,s1,s2;
+counter C(i,clk,clrc);
+controller Co(init,i,1'b0,s1,s2,clrm,clrc,clk);
+ROM3 R({Y2[i],Y6[i]},ROM_out,clrm);
+Adder A(ROM_out,shifter_out,adder_out);
+delay D(adder_out,delay_out,clk,clrm);
+shifter S(delay_out,shifter_out,clk,clrm);
+endmodule
+
+module DA4(Y1,Y2,Y3,delay_out,clk,init);
+//parameter M=3;
+//parameter N=6;
+//parameter K=8;
+input [31:0] Y1,Y2,Y3;
+output [31:0]delay_out;
+input clk,init;
+wire [31:0]i; 
+wire [31:0] ROM_out,adder_out,shifter_out;
+wire clrm,clrc,s1,s2;
+counter C(i,clk,clrc);
+controller Co(init,i,1'b0,s1,s2,clrm,clrc,clk);
+ROM4 R({Y3[i],Y2[i],Y1[i]},ROM_out,clrm);
+Adder A(ROM_out,shifter_out,adder_out);
+delay D(adder_out,delay_out,clk,clrm);
+shifter S(delay_out,shifter_out,clk,clrm);
+endmodule
+
+module DA5(Y1,Y2,Y3,delay_out,clk,init);
+//parameter M=3;
+//parameter N=6;
+//parameter K=8;
+input [31:0] Y1,Y2,Y3;
+output [31:0]delay_out;
+input clk,init;
+wire [31:0]i; 
+wire [31:0] ROM_out,adder_out,shifter_out;
+wire clrm,clrc,s1,s2;
+counter C(i,clk,clrc);
+controller Co(init,i,1'b0,s1,s2,clrm,clrc,clk);
+ROM5 R({Y3[i],Y2[i],Y1[i]},ROM_out,clrm);
+Adder A(ROM_out,shifter_out,adder_out);
+delay D(adder_out,delay_out,clk,clrm);
+shifter S(delay_out,shifter_out,clk,clrm);
+endmodule
+
+
+module ROM(Adress,ROM_out,clr);
+//parameter N = 8;
+//parameter M = 3;
+reg[31:0] Mem[0:7];
+
+input clr;
+input [2:0] Adress;
+output  reg[31:0] ROM_out;
+always @(*) begin
+if(clr)ROM_out<=0;
+else ROM_out<=Mem[Adress];
+end
+endmodule
+
+module ROM1(Adress,ROM_out,clr);
+//parameter N = 4;
+//parameter M = 2;
+//parameter P = 8;
+reg[31:0] Mem[0:3];
+input clr;
+input[1:0] Adress;
+output reg[31:0] ROM_out;
+always @(*) begin
+if(clr)ROM_out<=0;
+else ROM_out<=Mem[Adress];
+end
+endmodule
+
+module ROM2(Adress,ROM_out,clr);
+//parameter N = 8;
+//parameter M = 3;
+reg[31:0] Mem[0:7];
+
+input clr;
+input [2:0] Adress;
+output  reg[31:0] ROM_out;
+always @(*) begin
+if(clr)ROM_out<=0;
+else ROM_out<=Mem[Adress];
+end
+endmodule
+
+
+module ROM3(Adress,ROM_out,clr);
+//parameter N = 4;
+//parameter M = 2;
+//parameter P = 8;
+reg[31:0] Mem[0:3];
+input clr;
+input[1:0] Adress;
+output reg[31:0] ROM_out;
+always @(*) begin
+if(clr)ROM_out<=0;
+else ROM_out<=Mem[Adress];
+end
+endmodule
+
+
+module ROM4(Adress,ROM_out,clr);
+//parameter N = 8;
+//parameter M = 3;
+reg[31:0] Mem[0:7];
+
+input clr;
+input [2:0] Adress;
+output  reg[31:0] ROM_out;
+always @(*) begin
+if(clr)ROM_out<=0;
+else ROM_out<=Mem[Adress];
+end
+endmodule
+
+module ROM5(Adress,ROM_out,clr);
+//parameter N = 8;
+//parameter M = 3;
+reg[31:0] Mem[0:7];
+
+input clr;
+input [2:0] Adress;
+output  reg[31:0] ROM_out;
+always @(*) begin
+if(clr)ROM_out<=0;
+else ROM_out<=Mem[Adress];
+end
+endmodule
+
+module Adder(ROM_out,shifter_out,adder_out);
+//parameter N=8;
+input signed [31:0] ROM_out,shifter_out;
+output signed [31:0] adder_out;
+assign adder_out=ROM_out+shifter_out;
+endmodule
+
+
+module delay(A,delay_out,clk,clr);
+//parameter N =8;
+input[31:0] A;
+input clk,clr;
+output reg[31:0] delay_out;
+always @(posedge clk) begin
+if(clr)delay_out<=0;
+else delay_out<=A;
+end
+endmodule
+
+
+module shifter(delay_out,shifter_out,clk,clr);
+//parameter N =8;
+input clk,clr;
+input[31:0]delay_out;
+output reg[31:0] shifter_out;
+always @(posedge clk) begin
+if(clr)
+shifter_out <=0;
+else
+shifter_out <= delay_out >> 1;
+end
+endmodule
+
+module counter(out,clk,clr);
+parameter N = 32;
+parameter val = 32;
+input clk,clr;
+output reg[N-1:0] out;
+always @(posedge clk) begin
+if(clr)out<=31;
+else if(out==0)out<=31;
+else out<=out-1;
+end
+endmodule
+
+module controller(init,i,x3,s1,s2,clrm,clrc,clk);
+parameter N=32;
+input[N-1:0] i;
+input init,clk,x3;
+wire s;
+output reg s2,clrm,clrc;
+output s1;
+parameter S0=2'b00,S1=2'b01,S2=2'b10;
+reg[1:0] state;
+assign s=(i==N-1);
+assign s1=s;
+always @(posedge clk) begin
+case(state)
+S0:state<=init?S1:S0;
+S1:state<=S2;
+S2:state<=i<N?S2:S0;
+endcase
+end
+always @(state) begin
+case(state)
+S0:begin clrc<=1;clrm<=1;s2<=0;end
+S1:begin clrm<=0;clrc<=0;s2<=1; end
+S2:begin clrc<=0;s2<=0; clrc<=0;end
+endcase
+end
+endmodule
+

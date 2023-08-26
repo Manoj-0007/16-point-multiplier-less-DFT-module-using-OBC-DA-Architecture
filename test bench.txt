@@ -1,0 +1,155 @@
+`timescale 1ns / 1ps
+
+
+
+module fft_da_tb;
+parameter N =32;
+reg[N-1:0] x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15;
+wire[N-1:0] RX0,RX1,RX2,RX3,RX4,RX5,RX6,RX7,RX8,RX9,RX10,RX11,RX12,RX13,RX14,RX15,IX0,IX1,IX2,IX3,IX4,IX5,IX6,IX7,IX8,IX9,IX10,IX11,IX12,IX13,IX14,IX15;
+reg clk,init;
+integer outfile;
+fft_da dut(clk,init,x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,RX0,RX1,RX2,RX3,RX4,RX5,RX6,RX7,RX8,RX9,RX10,RX11,RX12,RX13,RX14,RX15,IX0,IX1,IX2,IX3,IX4,IX5,IX6,IX7,IX8,IX9,IX10,IX11,IX12,IX13,IX14,IX15);
+initial begin
+    clk=0;
+    init=0;
+  outfile=$fopen("avskalyan_outputs.txt","w");
+    dut.R1.A11.Co.state=2'b00;
+    dut.R1.A12.Co.state=2'b00;
+    dut.R3.A11.Co.state=2'b00;
+    dut.R3.A12.Co.state=2'b00;
+    dut.R5.A11.Co.state=2'b00;
+    dut.R5.A12.Co.state=2'b00;
+    dut.R7.A11.Co.state=2'b00;
+    dut.R7.A12.Co.state=2'b00;
+    dut.R2.A11.Co.state=2'b00;
+    dut.R6.A11.Co.state=2'b00;
+    dut.I1.A11.Co.state=2'b00;
+    dut.I1.A12.Co.state=2'b00;
+    dut.I3.A11.Co.state=2'b00;
+    dut.I3.A12.Co.state=2'b00;
+    dut.I5.A11.Co.state=2'b00;
+    dut.I5.A12.Co.state=2'b00;
+    dut.I7.A11.Co.state=2'b00;
+    dut.I7.A12.Co.state=2'b00;
+    dut.I2.A11.Co.state=2'b00;
+    dut.I6.A11.Co.state=2'b00;
+    $readmemb("ROM0.txt",dut.R1.A11.R.Mem);
+    $readmemb("ROM4.txt",dut.R1.A12.R.Mem);
+    $readmemb("ROM0.txt",dut.R3.A11.R.Mem);
+    $readmemb("ROM4.txt",dut.R3.A12.R.Mem);
+    $readmemb("ROM0.txt",dut.R5.A11.R.Mem);
+    $readmemb("ROM4.txt",dut.R5.A12.R.Mem);
+    $readmemb("ROM0.txt",dut.R7.A11.R.Mem);
+    $readmemb("ROM4.txt",dut.R7.A12.R.Mem);
+    $readmemb("ROM1.txt",dut.R2.A11.R.Mem);
+    
+    $readmemb("ROM1.txt",dut.R6.A11.R.Mem);
+    $readmemb("ROM2.txt",dut.I1.A11.R.Mem);
+    $readmemb("ROM5.txt",dut.I1.A12.R.Mem);
+    $readmemb("ROM2.txt",dut.I3.A11.R.Mem);
+    $readmemb("ROM5.txt",dut.I3.A12.R.Mem);
+    $readmemb("ROM2.txt",dut.I5.A11.R.Mem);
+    $readmemb("ROM5.txt",dut.I5.A12.R.Mem);
+    $readmemb("ROM2.txt",dut.I7.A11.R.Mem);
+    $readmemb("ROM5.txt",dut.I7.A12.R.Mem);
+    $readmemb("ROM3.txt",dut.I2.A11.R.Mem);
+    $readmemb("ROM3.txt",dut.I6.A11.R.Mem);
+    x0=32'd2;
+    x1=32'd2;
+    x2=32'd3;
+    x3=32'd4;
+    x4=32'd5;
+    x5=32'd6;
+    x6=32'd7;
+    x7=32'd8;
+    x8=32'd9;
+    x9=32'd10;
+    x10=32'd11;
+    x11=32'd12;
+    x12=32'd13;
+    x13=32'd14;
+    x14=32'd3;
+    x15=32'd2;
+    #5 init=1;#10 init=0;
+    #500 $finish;
+end
+always #5 clk=~clk;
+initial begin
+    $dumpfile("fft_da_tb.vcd");
+    $dumpvars(0,fft_da_tb);
+end
+always @(posedge clk) begin
+    if(dut.R1.A11.i==31)begin
+        $write("re0=%b\n",RX0);
+        $write("re1=%b\n",RX1);
+        $write("re2=%b\n",RX2);
+        $write("re3=%b\n",RX3);
+        $write("re4=%b\n",RX4);
+        $write("re5=%b\n",RX5);
+        $write("re6=%b\n",RX6);
+        $write("re7=%b\n",RX7);
+        $write("re8=%b\n",RX8);
+        $write("re9=%b\n",RX9);
+        $write("re10=%b\n",RX10);
+        $write("re11=%b\n",RX11);
+        $write("re12=%b\n",RX12);
+        $write("re13=%b\n",RX13);
+        $write("re14=%b\n",RX14);
+        $write("re15=%b\n",RX15);
+        $write("im0=%b\n",IX0);
+        $write("im1=%b\n",IX1);
+        $write("im2=%b\n",IX2);
+        $write("im3=%b\n",IX3);
+        $write("im4=%b\n",IX4);
+        $write("im5=%b\n",IX5);
+        $write("im6=%b\n",IX6);
+        $write("im7=%b\n",IX7);
+        $write("im8=%b\n",IX8);
+        $write("im9=%b\n",IX9);
+        $write("im10=%b\n",IX10);
+        $write("im11=%b\n",IX11);
+        $write("im12=%b\n",IX12);
+        $write("im13=%b\n",IX13);
+        $write("im14=%b\n",IX14);
+        $write("im15=%b\n",IX15);
+    end
+    end
+always @(posedge clk) begin
+     if(dut.R1.A11.i==31)begin
+         $fdisplay(outfile,"%b",RX0);
+         $fdisplay(outfile,"%b",RX1);
+         $fdisplay(outfile,"%b",RX2);
+         $fdisplay(outfile,"%b",RX3);
+         $fdisplay(outfile,"%b",RX4);
+         $fdisplay(outfile,"%b",RX5);
+         $fdisplay(outfile,"%b",RX6);
+         $fdisplay(outfile,"%b",RX7);
+         $fdisplay(outfile,"%b",RX8);
+         $fdisplay(outfile,"%b",RX9);
+         $fdisplay(outfile,"%b",RX10);
+         $fdisplay(outfile,"%b",RX11);
+         $fdisplay(outfile,"%b",RX12);
+         $fdisplay(outfile,"%b",RX13);
+         $fdisplay(outfile,"%b",RX14);
+         $fdisplay(outfile,"%b",RX15);
+         $fdisplay(outfile,"%b",IX0);
+         $fdisplay(outfile,"%b",IX1);
+         $fdisplay(outfile,"%b",IX2);
+         $fdisplay(outfile,"%b",IX3);
+         $fdisplay(outfile,"%b",IX4);
+         $fdisplay(outfile,"%b",IX5);
+         $fdisplay(outfile,"%b",IX6);
+         $fdisplay(outfile,"%b",IX7);
+         $fdisplay(outfile,"%b",IX8);
+         $fdisplay(outfile,"%b",IX9);
+         $fdisplay(outfile,"%b",IX10);
+         $fdisplay(outfile,"%b",IX11);
+         $fdisplay(outfile,"%b",IX12);
+         $fdisplay(outfile,"%b",IX13);
+         $fdisplay(outfile,"%b",IX14);
+         $fdisplay(outfile,"%b",IX15);
+
+
+     end
+end
+endmodule
